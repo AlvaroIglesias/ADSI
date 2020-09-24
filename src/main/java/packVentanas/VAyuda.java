@@ -54,20 +54,20 @@ public class VAyuda extends JFrame {
 		JTextArea textArea = new JTextArea();
 		textArea.setText("El juego consiste en despejar todas las casillas de \n"
 				+ "una pantalla que no oculten una mina.\n"+
-		"Algunas casillas tienen un nï¿½mero, el cual indica la\n"
+		"Algunas casillas tienen un número, el cual indica la\n"
 		+ "cantidad de minas que hay en las casillas\n"
 		+ "circundantes.\n"+
-				"Asï¿½, si una casilla tiene el nï¿½mero 3, significa que de\n"
+				"Así, si una casilla tiene el número 3, significa que de\n"
 				+ "las ocho casillas que hay alrededor (si no es en una\n"
 				+ "esquina o borde) hay 3 con minas y 5 sin minas.\n"
-				+ "Si se descubre una casilla sin nï¿½mero indica que\n"
+				+ "Si se descubre una casilla sin número indica que\n"
 				+ "ninguna de las casillas vecinas tiene mina y\n"
-				+ "ï¿½stas se descubren automï¿½ticamente.\n"
+				+ "éstas se descubren automáticamente.\n"
 				+ "Si se descubre una casilla con una mina se pierde\n"
 				+ "la partida.\n"
 				+ "Se puede poner una marca en las casillas que el\n"
 				+ "jugador piensa que hay minas para ayudar a\n"
-				+ "descubrir las que estï¿½n cerca.");
+				+ "descubrir las que están cerca.");
 		textArea.setFont(new Font("Roboto Slab", Font.BOLD, 14));
 		textArea.setEditable(false);
 		contentPane.add(textArea, "cell 0 1");
