@@ -267,7 +267,8 @@ public class Tablero extends Observable{
 		matriz[pFila-1][pColumna-1].inicializar(""+(pFila-1)+","+(pColumna-1));
 		((CasillaNumero)(matriz[pFila-1][pColumna-1])).sumarNumero();
 	}
-	private Casilla buscarCasilla(int pFila, int pCol) {
+	
+	public Casilla buscarCasilla(int pFila, int pCol) {
 		Casilla sol = matriz[pFila][pCol];
 		return sol;
 	}

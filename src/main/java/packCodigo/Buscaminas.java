@@ -40,6 +40,11 @@ public class Buscaminas extends Observable implements Observer{
 	 * 						*
 	 * @return 				*
 	 ************************/
+	
+	public Tablero getTablero(){
+		return tablero;
+	}
+	
 	private void setContMinas(){
 		contMinas = tablero.minas().size();
 	}

@@ -26,6 +26,8 @@ import javax.swing.border.EmptyBorder;
 
 import net.miginfocom.swing.MigLayout;
 import packCodigo.Buscaminas;
+import packCodigo.Casilla50;
+import packCodigo.CasillaReset;
 import packCodigo.NoArchivoAudioException;
 import packCodigo.Ranking;
 import packCodigo.Tablero;
@@ -242,7 +244,17 @@ public class VBuscaminas extends JFrame implements ActionListener, Observer{
 					}
 				}
 					});
-				l1.setIcon(new ImageIcon(VBuscaminas.class.getResource("/Casilla.png")));
+				
+				System.out.println("fila: " + j);
+				System.out.println("columna: " + i);
+				
+				if((Buscaminas.getBuscaminas().getTablero().buscarCasilla(j, i)) instanceof CasillaReset){
+					l1.setIcon(new ImageIcon(VBuscaminas.class.getResource("/CasillaReset.png")));
+				}else if((Buscaminas.getBuscaminas().getTablero().buscarCasilla(j, i)) instanceof Casilla50){
+					l1.setIcon(new ImageIcon(VBuscaminas.class.getResource("/Casilla50.png")));
+				}else{
+					l1.setIcon(new ImageIcon(VBuscaminas.class.getResource("/Casilla.png")));
+				}
 			}
 		}
 	}
