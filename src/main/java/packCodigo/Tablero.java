@@ -30,10 +30,12 @@ public class Tablero extends Observable{
 		}
 	
 	public void generarMatriz(){
-		int minasAColocar = this.calcularMinas();
+		int minasAColocar = this.calcularMinas()    -2; //minasAColocar serán las minas totales menos la reset y 50%
 		int x = this.filas;
 		int y = this.columnas;
 		int i,j = 0;
+		
+		//Primero, colocamos las minas normales
 		while(minasAColocar != 0){
 			i = this.randInt(x);
 			j = this.randInt(y);
@@ -45,6 +47,35 @@ public class Tablero extends Observable{
 			}
 		}
 		
+		
+		//Después, colocamos la mina reset
+		boolean minaColocada = false;
+		while(!minaColocada){
+			int m = this.randInt(x);
+			int n = this.randInt(y);
+			if(!((matriz[m][n]) instanceof CasillaMina)){
+				matriz[m][n] = CasillaFactory.getMiFactoria().generarCasilla("Reset");
+				matriz[m][n].inicializar(m+","+n);
+				generarCasillasNumero(m,n);
+				minaColocada=true;
+			}
+		}
+		
+		//Despues, colocamos la mina 50%
+		minaColocada = false;
+		while(!minaColocada){
+			int a = this.randInt(x);
+			int b = this.randInt(y);
+			if(!((matriz[a][b]) instanceof CasillaMina)){
+				matriz[a][b] = CasillaFactory.getMiFactoria().generarCasilla("50");
+				matriz[a][b].inicializar(a+","+b);
+				generarCasillasNumero(a,b);
+				minaColocada=true;
+			}
+		}
+		
+		
+		//Por último, las demás casillas
 		for(int k=0; k<=filas; k++){
 			for(int l=0; l<=columnas;l++){
 				if(matriz[k][l] == null){

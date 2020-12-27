@@ -18,6 +18,10 @@ public class CasillaFactory {
 		
 		if(tipo == "Mina"){
 			cas = new CasillaMina();
+		} else if (tipo == "Reset"){
+			cas = new CasillaReset();
+		} else if (tipo == "50"){
+			cas = new Casilla50();
 		} else if (tipo == "Numero"){
 			cas = new CasillaNumero();
 		} else if (tipo == "Vacia"){
