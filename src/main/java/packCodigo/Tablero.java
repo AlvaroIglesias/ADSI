@@ -91,6 +91,8 @@ public class Tablero extends Observable{
 		lCasillasVacias = vacias();
 	}
 	
+	
+	
 	private int calcularMinas(){
 		int sol = nivel*(columnas+1);
 		return sol;
@@ -379,6 +381,10 @@ public class Tablero extends Observable{
 			for (int j=0; j<=columnas; j++){
 				if(matriz[i][j] instanceof CasillaMina){
 					ls.add(((CasillaMina)matriz[i][j]).obtenerCoordenadas());
+				}else if(matriz[i][j] instanceof CasillaReset){
+					ls.add(((CasillaReset)matriz[i][j]).obtenerCoordenadas());
+				}else if(matriz[i][j] instanceof Casilla50){
+					ls.add(((Casilla50)matriz[i][j]).obtenerCoordenadas());
 				}
 			}
 		}
@@ -404,6 +410,11 @@ public class Tablero extends Observable{
 	
 	public int obtenerNumColumnas() {
 		return this.columnas;
+	}
+	
+	public void anadirBandera(){
+		setChanged();
+		notifyObservers(true + ",BANDERA");
 	}
 
 	public void ponerBandera(int fila, int col) {
@@ -461,10 +472,20 @@ public class Tablero extends Observable{
 				col=this.separarCoordenadasCol(this.separarCoordenadasString(mina));
 				fila=this.separarCoordenadasFil(this.separarCoordenadasString(mina));
 				casilla=buscarCasilla(fila, col);
-				if(!casilla.estaDesvelada()&&!casilla.tieneBandera()){
+				if(casilla instanceof CasillaMina && !casilla.estaDesvelada()&&!casilla.tieneBandera()){
 					casilla.descubrir();
 					setChanged();
 					notifyObservers(fila+","+col+","+10);
+				}
+				else if(casilla instanceof CasillaReset && !casilla.estaDesvelada()&&!casilla.tieneBandera()){
+					casilla.descubrir();
+					setChanged();
+					notifyObservers(fila+","+col+","+33);
+				}
+				else if(casilla instanceof Casilla50 && !casilla.estaDesvelada()&&!casilla.tieneBandera()){
+					casilla.descubrir();
+					setChanged();
+					notifyObservers(fila+","+col+","+55);
 				}
 			}
 		}
@@ -484,11 +505,13 @@ public class Tablero extends Observable{
 				col=this.separarCoordenadasCol(this.separarCoordenadasString(bandera));
 				fila=this.separarCoordenadasFil(this.separarCoordenadasString(bandera));
 				casilla=buscarCasilla(fila, col);
-				if(! (casilla instanceof CasillaMina) && casilla.tieneBandera()){
+				if(! (casilla instanceof CasillaMina) && ! (casilla instanceof CasillaReset) &&
+						! (casilla instanceof Casilla50) && casilla.tieneBandera()){
 					//casilla.cambioBandera();
 					setChanged();
 					notifyObservers(fila+","+col+","+11);	
 				}
+
 			}
 		}
 	}
@@ -572,6 +595,19 @@ public class Tablero extends Observable{
 	 */
 	public void descubrirCasilla(int pFila, int pCol){
 		Casilla casilla = this.buscarCasillaTablero(pFila, pCol);
+		
+		if(casilla instanceof CasillaReset){
+			casilla.descubrir();
+			setChanged();
+			notifyObservers(pFila+","+pCol+","+30);
+		}
+		
+		if(casilla instanceof Casilla50){
+			casilla.descubrir();
+			setChanged();
+			notifyObservers(pFila+","+pCol+","+50);
+		}
+		
 		if(casilla instanceof CasillaMina&&!casilla.estaDesvelada()&&!casilla.tieneBandera()){
 			casilla.descubrir();
 			setChanged();

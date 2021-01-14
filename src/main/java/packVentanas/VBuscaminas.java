@@ -8,6 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Timer;
@@ -26,7 +27,9 @@ import javax.swing.border.EmptyBorder;
 
 import net.miginfocom.swing.MigLayout;
 import packCodigo.Buscaminas;
+import packCodigo.Casilla;
 import packCodigo.Casilla50;
+import packCodigo.CasillaMina;
 import packCodigo.CasillaReset;
 import packCodigo.NoArchivoAudioException;
 import packCodigo.Ranking;
@@ -61,6 +64,8 @@ public class VBuscaminas extends JFrame implements ActionListener, Observer{
 	private Clip clip;
 	private AudioInputStream ais;
 	private int bomba = 0;
+	
+	private ArrayList<Integer> lminas = new ArrayList<Integer>();
 
 
 	/**
@@ -70,7 +75,7 @@ public class VBuscaminas extends JFrame implements ActionListener, Observer{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					VBuscaminas frame = new VBuscaminas(2);
+					VBuscaminas frame = new VBuscaminas(1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -231,8 +236,14 @@ public class VBuscaminas extends JFrame implements ActionListener, Observer{
 							 int b;
 							 a=getx(buscarPosCasilla((JLabel)e.getSource()));
 							 b=gety(buscarPosCasilla((JLabel)e.getSource()));
-							 Buscaminas.getBuscaminas().descubrirCasilla(a,b);
-		                     Buscaminas.getBuscaminas().comprobarJuego();
+							 Casilla c = Buscaminas.getBuscaminas().getTablero().buscarCasilla(a, b);
+							 if(!c.estaDesvelada()){
+								 	Buscaminas.getBuscaminas().descubrirCasilla(a,b);
+								 	Buscaminas.getBuscaminas().comprobarJuego();
+
+							 }
+									 
+		                     
 					} else
 						if(e.getButton() == MouseEvent.BUTTON2 && juego && !finalizado){
 							int a;
@@ -245,13 +256,17 @@ public class VBuscaminas extends JFrame implements ActionListener, Observer{
 				}
 					});
 				
-				System.out.println("fila: " + j);
-				System.out.println("columna: " + i);
+				//System.out.println("fila: " + j);
+				//System.out.println("columna: " + i);
 				
 				if((Buscaminas.getBuscaminas().getTablero().buscarCasilla(j, i)) instanceof CasillaReset){
 					l1.setIcon(new ImageIcon(VBuscaminas.class.getResource("/CasillaReset.png")));
 				}else if((Buscaminas.getBuscaminas().getTablero().buscarCasilla(j, i)) instanceof Casilla50){
 					l1.setIcon(new ImageIcon(VBuscaminas.class.getResource("/Casilla50.png")));
+					
+				}else if((Buscaminas.getBuscaminas().getTablero().buscarCasilla(j, i)) instanceof CasillaMina){
+					l1.setIcon(new ImageIcon(VBuscaminas.class.getResource("/CasillaMina.png")));
+					
 				}else{
 					l1.setIcon(new ImageIcon(VBuscaminas.class.getResource("/Casilla.png")));
 				}
@@ -346,23 +361,118 @@ public class VBuscaminas extends JFrame implements ActionListener, Observer{
 				if (p.length == 3){
 				int pos = calcularPosicion(Integer.parseInt(p[0]), Integer.parseInt(p[1]));
 				  if(1<=Integer.parseInt(p[2]) && Integer.parseInt(p[2])<=8){
+					  System.out.println("1.- " + p[0] + p[1] + p[2]);
 					  lcasillas[pos].setIcon(new ImageIcon(VBuscaminas.class.getResource("/Casilla"+Integer.parseInt(p[2])+".png")));
 				    }else if(Integer.parseInt(p[2])==0){
+				    	System.out.println("2.- " + p[0] + p[1] + p[2]);
 				    	   lcasillas[pos].setIcon(new ImageIcon(VBuscaminas.class.getResource("/CasillaVacia.png")));
+				    	   
 				    }else if(Integer.parseInt(p[2])==10){
+				    	System.out.println("3.- " + p[0] + p[1] + p[2]);
 				    	if(bomba == 0){
+				    		System.out.println("3.1.- " + p[0] + p[1] + p[2]);
 				    		 lcasillas[pos].setIcon(new ImageIcon(VBuscaminas.class.getResource("/CasillaPrimeraMina.png")));
 				    		 bomba++;
 				    	} else {
+				    		System.out.println("3.2..- " + p[0] + p[1] + p[2]);
 				    		 lcasillas[pos].setIcon(new ImageIcon(VBuscaminas.class.getResource("/CasillaMina.png")));	  
 				    	}
-				    }else if(Integer.parseInt(p[2])==11){
+				    }else if(Integer.parseInt(p[2])==33){
+				    	if(bomba == 0){
+				    		 lcasillas[pos].setIcon(new ImageIcon(VBuscaminas.class.getResource("/CasillaReset.png")));
+				    		 bomba++;
+				    	} else {
+				    		 lcasillas[pos].setIcon(new ImageIcon(VBuscaminas.class.getResource("/CasillaResetNP.png")));	  
+				    	}
+				    }else if(Integer.parseInt(p[2])==55){
+				    	if(bomba == 0){
+				    		 lcasillas[pos].setIcon(new ImageIcon(VBuscaminas.class.getResource("/Casilla50.png")));
+				    		 bomba++;
+				    	} else {
+				    		 lcasillas[pos].setIcon(new ImageIcon(VBuscaminas.class.getResource("/Casilla50NP.png")));	  
+				    	}
+				    
+					}else if(Integer.parseInt(p[2])==11){
+				    	System.out.println("4.- " + p[0] + p[1] + p[2]);
 				    	lcasillas[pos].setIcon(new ImageIcon(VBuscaminas.class.getResource("/CasillaNoMina.png")));
+				    	
+				    }else if(Integer.parseInt(p[2])==30){	//MINA RESET
+				    	lcasillas[pos].setIcon(new ImageIcon(VBuscaminas.class.getResource("/CasillaReset.png")));
+				    	System.out.println("MINA RESET DESCUBIERTA");
+				    	
+				    	Buscaminas.getBuscaminas().setPausa(true);
+
+				    	JOptionPane.showMessageDialog(null, "OHH! Has destapado una casilla reset. Se reiniciará el\ntablero cubriendo de nuevo "
+				    			+ "todas las casillas.  Pero,\n¡corre!, que el tiempo sigue contando.");
+				    	System.out.println(Buscaminas.getBuscaminas().getTiempoTrans());
+				    	
+				    	Buscaminas.getBuscaminas().reset(this);
+				    	
+				    	
+
+				    	
+				    }
+				    else if(Integer.parseInt(p[2])==50){	//MINA 50
+				    	lcasillas[pos].setIcon(new ImageIcon(VBuscaminas.class.getResource("/Casilla50.png")));
+				    	System.out.println("MINA 50 DESCUBIERTA");
+				    	
+				    	Buscaminas.getBuscaminas().setPausa(true);
+				    	
+				    	JOptionPane.showMessageDialog(null, "Hoy es tu día de suerte! Has abierto una mina, \npero no te preocupes."
+				    			+ " Se marcarán el 50% de las\nminas que aún estaban sin marcar.");
+				    	
+				    	Buscaminas.getBuscaminas().setPausa(false);
+
+				    	Buscaminas.getBuscaminas().getTablero().anadirBandera();
+
+				    	marcar50();
+				    	
+				    	
 				    }
 				}
 			}
 	}
 	
+	
+	public void marcar50(){
+		
+		
+		int a = getx(0);
+		int b = gety(0);
+		int r = calcularPosicion(a, b);
+		System.out.println(r);
+		
+		//
+		
+		for(int i=0; i<=col; i++){
+			
+			for(int j=0; j<=fil; j++){
+				
+				Casilla c = Buscaminas.getBuscaminas().getTablero().buscarCasilla(j, i);
+				
+				if((c instanceof CasillaMina || c instanceof CasillaReset) && (!c.tieneBandera())){
+					System.out.println(j + "," + i);
+					lminas.add(calcularPosicion(j, i));
+				}
+				
+			}
+		}
+		
+		//Obtenemos la mitad del numero de minas sin marcar que queden y redondeamos para abajo
+		int mitad = (int) Math.floor(lminas.size()/2);
+		System.out.println(mitad);
+		
+		for(int x = 0; x < mitad; x++){
+			
+			int z = lminas.get(x);
+			
+			//Casilla c = Buscaminas.getBuscaminas().getTablero().buscarCasilla(getx(z), gety(z));
+			Buscaminas.getBuscaminas().ponerBandera(getx(z), gety(z));
+			
+			
+		}
+		
+	}
 
 	public void actionPerformed(ActionEvent e) {
         if (e.getSource()==item1) {
@@ -411,7 +521,7 @@ public class VBuscaminas extends JFrame implements ActionListener, Observer{
 	
 	private void play(boolean pB) throws NoArchivoAudioException{
 		if (pB==false){
-			if (new File("sources/lose.wav").getAbsoluteFile() != null){
+			if (new File("resources/lose.wav").getAbsoluteFile() != null){
 				try {
 					ais = AudioSystem.getAudioInputStream(new File("src/main/resources/lose.wav").getAbsoluteFile());
 				} catch (UnsupportedAudioFileException e) {
@@ -435,9 +545,9 @@ public class VBuscaminas extends JFrame implements ActionListener, Observer{
 				throw new NoArchivoAudioException();
 			}
 		}else{
-			if (new File("sources/win.wav").getAbsoluteFile() != null){
+			if (new File("resources/win.wav").getAbsoluteFile() != null){
 				try {
-					ais = AudioSystem.getAudioInputStream(new File("sources/win.wav").getAbsoluteFile());
+					ais = AudioSystem.getAudioInputStream(new File("src/main/resources/win.wav").getAbsoluteFile());
 				} catch (UnsupportedAudioFileException e) {
 					e.printStackTrace();
 				} catch (IOException e) {

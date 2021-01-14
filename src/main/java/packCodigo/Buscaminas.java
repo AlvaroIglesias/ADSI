@@ -20,6 +20,7 @@ public class Buscaminas extends Observable implements Observer{
 	private int puntuacion;
 	private boolean finalizado = false;
 	private Jugador j;
+	private boolean pausa;
 	
 	/****************
 	 * CONSTRUCTORA	*
@@ -45,8 +46,20 @@ public class Buscaminas extends Observable implements Observer{
 		return tablero;
 	}
 	
+/*	public void anadirBandera(){
+		this.contBanderas++;
+		setChanged();
+		//notifyObservers(tiempoTrans + "," + contBanderas);
+		notifyObservers(null + "," + contBanderas);
+	}
+*/
 	private void setContMinas(){
 		contMinas = tablero.minas().size();
+	}
+	
+	public float getTiempoTrans(){
+		
+		return this.tiempoTrans;
 	}
 
 	/**Iniciamos el juego**/
@@ -84,13 +97,32 @@ public class Buscaminas extends Observable implements Observer{
 		tablero.addObserver(vBuscaminas);
 		setContMinas();
 		contBanderas=contMinas;
-		tiempoTrans = -1;
-		timer.cancel();
-		crono();
+		pausa=false;
+		//tiempoTrans = -1;
+		//timer.cancel();
+		//crono();
 		tablero.addObserver(this);
 		setJuego(true);
 		setFinalizado(false);
 	}
+	
+	public int getNivel(){
+		return nivel;
+	}
+	
+	
+	public void setPausa(boolean pPausa){
+		this.pausa = pPausa;
+	}
+	
+/*	
+	public void anadirCasillaAListaBanderas(int fila, int columna){
+		this.getTablero().anadirCasillaBandera(fila, columna);
+		
+		setChanged();
+		notifyObservers(true + ",BANDERA");
+	}*/
+	
 	
 	/**SetJuego**/
 	private void setJuego(boolean pJuego){
@@ -154,23 +186,33 @@ public class Buscaminas extends Observable implements Observer{
 	  TimerTask  timerTask = new TimerTask() {
 	   @Override
 	   public void run() {
-	    String texto;
-	    tiempoTrans++;
-	    texto = ""+(int)tiempoTrans;
-	    if(tiempoTrans<10){
-	    	setChanged();
-	 	    notifyObservers("00"+texto+","+contBanderas);
-	    }else if(tiempoTrans<100){
-	    	 setChanged();
-	 	    notifyObservers("0"+texto+","+contBanderas);
+	    if(pausa){
+	    	try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	    }else{
-	    	setChanged();
-	    	notifyObservers(texto+","+contBanderas);
+	    	String texto;
+	    	tiempoTrans++;
+	    	texto = ""+(int)tiempoTrans;
+	    	if(tiempoTrans<10){
+	    		setChanged();
+	    		notifyObservers("00"+texto+","+contBanderas);
+	    	}else if(tiempoTrans<100){
+	    		setChanged();
+	    		notifyObservers("0"+texto+","+contBanderas);
+	    	}else{
+	    		setChanged();
+	    		notifyObservers(texto+","+contBanderas);
 	    	}
+	    }
 	   }
 	  };
 	  timer = new Timer();
 	  timer.scheduleAtFixedRate(timerTask, 0, 1000);
+	  
 	 }
 	
 	public void update(Observable pObservable, Object pObjeto) {
@@ -266,9 +308,9 @@ public class Buscaminas extends Observable implements Observer{
 	}
 	
 	private void asignarPuntos(){
-		if(j.obtenerPunt()<puntuacion){
+		//if(j.obtenerPunt()<puntuacion){
 			j.establecerPuntuacion(puntuacion);
-		}
+		//}
 	}
 
 	public void descubrirTodosLosVecinos(int a, int b) {
