@@ -115,6 +115,10 @@ public class Buscaminas extends Observable implements Observer{
 		this.pausa = pPausa;
 	}
 	
+	public Jugador getJugador() {
+		return this.j;
+	}
+	
 /*	
 	public void anadirCasillaAListaBanderas(int fila, int columna){
 		this.getTablero().anadirCasillaBandera(fila, columna);
@@ -315,6 +319,24 @@ public class Buscaminas extends Observable implements Observer{
 
 	public void descubrirTodosLosVecinos(int a, int b) {
 		tablero.descubrirTodosLosVecinos(a,b);
+	}
+	
+	/**
+	 * Funcionalidad Premios:
+	 * Se añade una partida ganada al jugador teniendo en cuenta el nivel en el que 
+	 * está jugando.
+	 */
+	public String nuevaGanada() {
+		return j.anadirGanada(this.nivel);
+	}
+	
+	/**
+	 * Funcionalidad Premios:
+	 * Se borra el historial de partidas ganadas seguidas para el jugador teniendo
+	 * en cuenta el nivel en el que está jugando.
+	 */
+	public void nuevaPerdida() {
+		j.borrarSeguidas(this.nivel);
 	}
 	
 
