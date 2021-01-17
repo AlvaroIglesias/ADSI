@@ -8,6 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -296,6 +297,21 @@ public class VBuscaminas extends JFrame implements ActionListener, Observer{
 		return pos;
 	}
 
+	public void compartirTweet() {
+		if(java.awt.Desktop.isDesktopSupported()) {
+			java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+			
+			int puntos = Buscaminas.getBuscaminas().obtenerPuntuacion();
+			String enlace = "http://twitter.com/share?text=Mira+mi+puntuación+de+"+String.valueOf(puntos)+"+puntos+que+logre+en+buscaminas&url=#buscaminas";
+			if(desktop.isSupported(java.awt.Desktop.Action.BROWSE)) {
+				try {
+					java.net.URI uri= new java.net.URI(enlace);
+					desktop.browse(uri);
+				}catch(URISyntaxException | IOException ex) {}
+			}
+		}
+	}
+	
 	public void update(Observable o, Object arg) {
 		String[]p = arg.toString().split(",");
 		if(o instanceof Buscaminas){ 
@@ -327,7 +343,12 @@ public class VBuscaminas extends JFrame implements ActionListener, Observer{
 						   e.printStackTrace();
 					   }
 					   lblNewLabel.setIcon(new ImageIcon(VBuscaminas.class.getResource("/Perder.png")));
-					   JOptionPane.showMessageDialog(null, "OOOHHHHH QUE PENA, HAS ENCONTRADO UNA MINA!!!");
+					   //JOptionPane.showMessageDialog(null, "OOOHHHHH QUE PENA, HAS ENCONTRADO UNA MINA!!!");
+					   String[] opciones = {"OK", "Compartir"};
+					   int compartir = JOptionPane.showOptionDialog(null, "OOOHHHHH QUE PENA, HAS ENCONTRADO UNA MINA!!!", null, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, opciones, null);
+					   if(compartir == 1) {
+						   compartirTweet();
+					   }
 					   Ranking.getRanking().guardarLista();
 				   }
 				   else {
@@ -354,7 +375,12 @@ public class VBuscaminas extends JFrame implements ActionListener, Observer{
 				   lblNewLabel.setIcon(new ImageIcon(VBuscaminas.class.getResource("/Victoria.png"))); 
 				   mostrarRanking();
 				   Ranking.getRanking().guardarLista();
-				   JOptionPane.showMessageDialog(null, "HAS RESUELTO CORRECTAMENTE!!!");
+				   //JOptionPane.showMessageDialog(null, "HAS RESUELTO CORRECTAMENTE!!!");
+				   String[] opciones = {"OK", "Compartir"};
+				   int compartir = JOptionPane.showOptionDialog(null, "HAS RESUELTO CORRECTAMENTE!!!", null, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, opciones, null);
+				   if(compartir == 1) {
+					   compartirTweet();
+				   }
 
 			   }
 			} else if(o instanceof Tablero){
