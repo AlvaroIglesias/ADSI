@@ -50,7 +50,7 @@ public class VBuscaminas extends JFrame implements ActionListener, Observer{
 	private JPanel contentPane;
 	private JMenuBar menuBar;
 	private JMenu menu1, menu2;
-	private JMenuItem item1, item2, item3;
+	private JMenuItem item1, item2, item3, item4;
 	private JPanel panel_2;
 	private JLabel lblNewLabel;
 	private JLabel[] Banderas = new JLabel[3];
@@ -122,6 +122,14 @@ public class VBuscaminas extends JFrame implements ActionListener, Observer{
 		item3 = new JMenuItem("Ranking");
 		item3.addActionListener(this);
 		menu1.add(item3);
+		
+		/**
+		 * Funcionalidad Premios:
+		 * Nuevo botón para ver la lista de premios ganados.
+		 */
+		item4 = new JMenuItem("Premios");
+		item4.addActionListener(this);
+		menu1.add(item4);
 		
 		
 		contentPane = new JPanel();
@@ -349,6 +357,15 @@ public class VBuscaminas extends JFrame implements ActionListener, Observer{
 					   if(compartir == 1) {
 						   compartirTweet(); //tweet
 					   }
+					   
+					   /**
+						 * Funcionalidad Premios:
+						 * Se notifica que se ha perdido una partida para borrar
+						 * el historial de partidas ganadas seguidas de ese jugador en 
+						 * ese nivel.
+						 */
+					   Buscaminas.getBuscaminas().nuevaPerdida();
+					   
 					   Ranking.getRanking().guardarLista();
 				   }
 				   else {
@@ -373,6 +390,18 @@ public class VBuscaminas extends JFrame implements ActionListener, Observer{
 					   e.printStackTrace();
 				   }
 				   lblNewLabel.setIcon(new ImageIcon(VBuscaminas.class.getResource("/Victoria.png"))); 
+				   
+				   /**
+					 * Funcionalidad Premios:
+					 * Se notifica que se ha ganado una partida, y en caso de ganar un premio
+					 * se muestra una ventana con un mensaje para que el jugador lo sepa.
+					 */
+
+				   String premio=Buscaminas.getBuscaminas().nuevaGanada();
+				   if (!premio.equals("")) {
+					   JOptionPane.showMessageDialog(null, "¡NUEVO PREMIO!\n"+premio);
+				   }
+				   
 				   mostrarRanking();
 				   Ranking.getRanking().guardarLista();
 				   //JOptionPane.showMessageDialog(null, "HAS RESUELTO CORRECTAMENTE!!!");
@@ -508,7 +537,15 @@ public class VBuscaminas extends JFrame implements ActionListener, Observer{
 			vA.setVisible(true);
         }else if (e.getSource() == item3){
         	mostrarRanking();
+        	/**
+        	 * Funcionalidad Premios:
+        	 * Añadimos el item4, que es el de la ventana de premios.
+        	 */
+        }else if (e.getSource() == item4){
+        	mostrarPremios();
         }
+        
+        
    }
 	
 	private void habilitarCasillas(){
@@ -528,6 +565,15 @@ public class VBuscaminas extends JFrame implements ActionListener, Observer{
 		Buscaminas.getBuscaminas().calcularPuntos();
     	VRanking vR = new VRanking();
 		vR.setVisible(true);
+	}
+	
+	/**
+	 * Funcionalidad Premios:
+	 * Método para mostrar la pantalla de premios.
+	 */
+	private void mostrarPremios() {
+		VPremios vP = new VPremios();
+		vP.setVisible(true);
 	}
 		
 	private void autoGuardadoRank(){
