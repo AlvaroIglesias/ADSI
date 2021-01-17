@@ -17,6 +17,11 @@ public class Jugador {
 	
 	public Jugador(String pNombre){
 		nombre = pNombre;
+		
+		//Funcionalidad Premios: Inicializamos las variables 'ganadas' y 'seguidas'.
+		ganadas = new int[MAX_NIVEL];
+		seguidas = new int[MAX_NIVEL];
+		
 	}
 	
 	public void establecerPuntuacion(int pPuntuacion){
