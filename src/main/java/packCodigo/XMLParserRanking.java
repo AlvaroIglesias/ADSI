@@ -17,6 +17,13 @@ public class XMLParserRanking extends DefaultHandler {
 	private String nombre = null;
 	private int puntos = 0;
 	private Jugador jug = null;
+	
+	/**
+	 * Funcionalidad Premios:
+	 * Declaraciones de las variables 'ganadas' y 'seguidas'.
+	 */
+	private String ganadas="";
+	private String seguidas="";
 
 //	private Puntuacion puntuacionActual = null;
 
@@ -142,6 +149,13 @@ public class XMLParserRanking extends DefaultHandler {
 			operators.put("root", new rootTagOperator());
 			operators.put("Puntuacion", new PuntuacionTagOperator());
 			operators.put("Nombre", new NombreTagOperator());
+			
+			/**
+			 * Funcionalidad Premios:
+			 * Añadimos los operators para Ganadas y Seguidas.
+			 */
+			operators.put("Ganadas", new GanadasTagOperator());
+			operators.put("Seguidas", new SeguidasTagOperator());
 		}
 
 		public TagOperator getTagOperator(String pName) {
@@ -180,6 +194,31 @@ public class XMLParserRanking extends DefaultHandler {
 
 	// TENEIS QUE IMPLEMENTAR UNA CLASE PRIVADA SIMILAR A ESTA PARA CADA TAG QUE
 	// DEFINAIS EN VUESTRO FICHERO XML
+	
+	/**
+	 * Funcionalidad Premios:
+	 * Clase privada para nuestro tag 'Ganadas'.
+	 */
+	private class GanadasTagOperator implements TagOperator {
+		// Implementacion del tratamiento del tag </Ganadas>
+		public void invokeEnd() {
+			ganadas = texto;
+			jug.extraerGanadas(texto);
+		}
+
+	}
+	/**
+	 * Funcionalidad Premios:
+	 * Clase privada para nuestro tag 'Seguidas'.
+	 */
+	private class SeguidasTagOperator implements TagOperator {
+		// Implementacion del tratamiento del tag </Seguidas>
+		public void invokeEnd() {
+			seguidas = texto;
+			jug.extraerSeguidas(texto);
+		}
+
+	}
 
 }
 

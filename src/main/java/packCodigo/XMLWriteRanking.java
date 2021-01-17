@@ -45,6 +45,26 @@ public class XMLWriteRanking {
 				System.out.println("El usuario: "+Ranking.getRanking().conseguirJugadorPos(i).obtenerNombre());
 				staff.appendChild(doc.createTextNode(Ranking.getRanking().conseguirJugadorPos(i).obtenerNombre()));
 				rootElement.appendChild(staff);
+				
+				/**
+				 * Funcionalidad Premios:
+				 * Serializamos las partidas ganadas totales y las mostramos por pantalla.
+				 */
+				// Ganadas
+				Element ganadas = doc.createElement("Ganadas");
+				System.out.println("Tiene Ganadas: "+Ranking.getRanking().conseguirJugadorPos(i).serializeGanadas());
+				ganadas.appendChild(doc.createTextNode(Ranking.getRanking().conseguirJugadorPos(i).serializeGanadas()));
+				rootElement.appendChild(ganadas);
+				
+				/**
+				 * Funcionalidad Premios:
+				 * Serializamos las partidas ganadas seguidas y las mostramos por pantalla.
+				 */
+				// Seguidas
+				Element seguidas = doc.createElement("Seguidas");
+				System.out.println("Tiene Ganadas Seguidas: "+Ranking.getRanking().conseguirJugadorPos(i).serializeSeguidas());
+				seguidas.appendChild(doc.createTextNode(Ranking.getRanking().conseguirJugadorPos(i).serializeSeguidas()));
+				rootElement.appendChild(seguidas);
 
 				// firstname elements
 				Element firstname = doc.createElement("Puntuacion");
