@@ -347,7 +347,7 @@ public class VBuscaminas extends JFrame implements ActionListener, Observer{
 					   String[] opciones = {"OK", "Compartir"};
 					   int compartir = JOptionPane.showOptionDialog(null, "OOOHHHHH QUE PENA, HAS ENCONTRADO UNA MINA!!!", null, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, opciones, null);
 					   if(compartir == 1) {
-						   compartirTweet();
+						   compartirTweet(); //tweet
 					   }
 					   Ranking.getRanking().guardarLista();
 				   }
